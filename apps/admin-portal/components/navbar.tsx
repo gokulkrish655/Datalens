@@ -1,10 +1,10 @@
 ﻿import Link from 'next/link';
 
 const links = [
-  { label: 'Dashboard', href: '/app/dashboard' },
-  { label: 'Tenants', href: '/app/tenants' },
-  { label: 'Impersonations', href: '/app/impersonations' },
-  { label: 'Settings', href: '/app/settings' },
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Tenants', href: '/tenants' },
+  { label: 'Impersonations', href: '/impersonations' },
+  { label: 'Settings', href: '/settings' },
 ];
 
 export function AdminNavbar() {

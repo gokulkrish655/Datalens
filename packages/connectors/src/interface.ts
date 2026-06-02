@@ -1,7 +1,8 @@
 ﻿export interface ConnectionConfig {
   host: string;
   port?: number;
-  user: string;
+  user?: string;
+  username?: string;
   password: string;
   database?: string;
   schema?: string;
@@ -11,8 +12,10 @@
 
 export interface VersionInfo {
   connectorName: string;
-  dbVersionString: string;
-  dbVersionMajor: number;
+  versionString: string;
+  major: number;
+  minor: number;
+  patch: number;
   dialectDescription: string;
 }
 
@@ -22,6 +25,7 @@ export interface SchemaTableInfo {
   displayName: string;
   description?: string;
   rowCountEstimate?: bigint;
+  nativeComment?: string;
 }
 
 export interface SchemaColumnInfo {
@@ -33,6 +37,22 @@ export interface SchemaColumnInfo {
   description?: string;
   semanticType: string;
   defaultValue?: string;
+  isNullable?: boolean;
+  isPrimaryKey?: boolean;
+  isForeignKey?: boolean;
+  referencesTable?: string;
+  referencesColumn?: string;
+  nativeComment?: string;
+}
+
+export interface ForeignKeyInfo {
+  fromSchema: string;
+  fromTable: string;
+  fromColumn: string;
+  toSchema: string;
+  toTable: string;
+  toColumn: string;
+  constraintName?: string;
 }
 
 export interface QueryResult {
@@ -49,25 +69,32 @@ export class ReadOnlyViolationError extends Error {
 
 export interface IDbConnector {
   readonly name: string;
+  readonly displayName: string;
   detectVersion(config: ConnectionConfig): Promise<VersionInfo>;
   introspectTables(config: ConnectionConfig): Promise<SchemaTableInfo[]>;
-  introspectColumns(config: ConnectionConfig): Promise<SchemaColumnInfo[]>;
+  introspectColumns(
+    config: ConnectionConfig,
+    tableFilter?: Array<{ schemaName: string; tableName: string }>,
+  ): Promise<SchemaColumnInfo[]>;
+  introspectRelationships(config: ConnectionConfig): Promise<ForeignKeyInfo[]>;
   sampleColumn(
     config: ConnectionConfig,
     schemaName: string,
     tableName: string,
     columnName: string,
-    limit: number,
+    limit?: number,
   ): Promise<string[]>;
   validateWhereClause(
     config: ConnectionConfig,
+    schemaName: string,
+    tableName: string,
     whereClause: string,
   ): Promise<{ valid: boolean; error?: string }>;
   executeQuery(
     config: ConnectionConfig,
     sql: string,
-    timeoutMs: number,
     rowLimit: number,
+    timeoutMs: number,
   ): Promise<QueryResult>;
   testConnection(
     config: ConnectionConfig,

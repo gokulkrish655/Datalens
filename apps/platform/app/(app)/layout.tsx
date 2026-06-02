@@ -1,4 +1,4 @@
-﻿import './globals.css';
+﻿import '../globals.css';
 import { Sidebar } from '../../components/sidebar';
 import type { Metadata } from 'next';
 

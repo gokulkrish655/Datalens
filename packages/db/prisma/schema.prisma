@@ -1,4 +1,4 @@
-﻿generator client {
+generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
@@ -9,14 +9,47 @@ datasource db {
   extensions = [pgvector(map: "vector")]
 }
 
-enum Plan { STARTER PRO ENTERPRISE }
-enum TenantRole { BASIC_USER MANAGER DB_ADMIN }
-enum UserStatus { PENDING ACTIVE INACTIVE }
-enum ConnectionStatus { PENDING CONNECTED ERROR SYNCING PAUSED }
-enum ConnectionMethod { DIRECT SSH_TUNNEL }
-enum LoadProfile { CONSERVATIVE BALANCED PERFORMANCE }
-enum DescriptionSource { AI_GENERATED HUMAN_WRITTEN IMPORTED }
-enum TableVisibility { PUBLIC RESTRICTED PRIVATE }
+enum Plan {
+  STARTER
+  PRO
+  ENTERPRISE
+}
+enum TenantRole {
+  BASIC_USER
+  MANAGER
+  DB_ADMIN
+}
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+enum ConnectionStatus {
+  PENDING
+  CONNECTED
+  ERROR
+  SYNCING
+  PAUSED
+}
+enum ConnectionMethod {
+  DIRECT
+  SSH_TUNNEL
+}
+enum LoadProfile {
+  CONSERVATIVE
+  BALANCED
+  PERFORMANCE
+}
+enum DescriptionSource {
+  AI_GENERATED
+  HUMAN_WRITTEN
+  IMPORTED
+}
+enum TableVisibility {
+  PUBLIC
+  RESTRICTED
+  PRIVATE
+}
 enum SemanticType {
   UNKNOWN
   EMAIL
@@ -28,14 +61,57 @@ enum SemanticType {
   URL
   CATEGORY
 }
-enum RequestStatus { PENDING APPROVED DENIED EXPIRED REVOKED }
-enum StageStatus { PENDING APPROVED DENIED SKIPPED }
-enum ApproverType { MANAGER TABLE_OWNER DB_ADMIN }
-enum MessageRole { USER ASSISTANT }
-enum MessageType { QUERY CLARIFICATION_QUESTION CLARIFICATION_ANSWER UNDERSTANDING RESULT BLOCKED ERROR }
-enum QueryStatus { SUCCESS BLOCKED_PERMISSION SQL_ERROR LLM_ERROR VALIDATION_ERROR IMPOSSIBLE CLARIFICATION_NEEDED }
-enum DownloadFormat { CSV XLSX JSON }
-enum ProviderCategory { LLM EMBEDDING EMAIL STORAGE }
+enum RequestStatus {
+  PENDING
+  APPROVED
+  DENIED
+  EXPIRED
+  REVOKED
+}
+enum StageStatus {
+  PENDING
+  APPROVED
+  DENIED
+  SKIPPED
+}
+enum ApproverType {
+  MANAGER
+  TABLE_OWNER
+  DB_ADMIN
+}
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+enum MessageType {
+  QUERY
+  CLARIFICATION_QUESTION
+  CLARIFICATION_ANSWER
+  UNDERSTANDING
+  RESULT
+  BLOCKED
+  ERROR
+}
+enum QueryStatus {
+  SUCCESS
+  BLOCKED_PERMISSION
+  SQL_ERROR
+  LLM_ERROR
+  VALIDATION_ERROR
+  IMPOSSIBLE
+  CLARIFICATION_NEEDED
+}
+enum DownloadFormat {
+  CSV
+  XLSX
+  JSON
+}
+enum ProviderCategory {
+  LLM
+  EMBEDDING
+  EMAIL
+  STORAGE
+}
 
 model Tenant {
   id                 String           @id @default(uuid())
@@ -43,13 +119,19 @@ model Tenant {
   plan               Plan             @default(STARTER)
   isActive           Boolean          @default(true)
   domains            TenantDomain[]
+  tenantApiKeys      TenantApiKey[]
   users              User[]
+  invitations        Invitation[]
   databaseConnections DatabaseConnection[]
   schemaTables       SchemaTable[]
   schemaColumns      SchemaColumn[]
   usageRecords       UsageRecord[]
+  queryLogs          QueryLog[]
   providerConfigs    ProviderConfig[]
   accessRequests     AccessRequest[]
+  rowFilters         RowFilter[]
+  tableOwnerships    TableOwnership[]
+  tableAccessGrants  TableAccessGrant[]
   querySessions      QuerySession[]
   impersonationLogs  ImpersonationLog[]
 }
@@ -112,10 +194,11 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   sessions         Session[]
-  invitations      Invitation[]
+  invitations      Invitation[] @relation("UserInvitations")
   passwordResets   PasswordResetToken[]
   querySessions    QuerySession[]
   createdRequests  AccessRequest[] @relation("Requester")
+  grants           TableAccessGrant[]
 }
 
 model Session {
@@ -130,6 +213,8 @@ model Invitation {
   id         String   @id @default(uuid())
   tenant     Tenant   @relation(fields: [tenantId], references: [id])
   tenantId   String
+  user       User?    @relation("UserInvitations", fields: [userId], references: [id])
+  userId     String?
   email      String
   name       String?
   role       TenantRole @default(BASIC_USER)
@@ -171,7 +256,7 @@ model DatabaseConnection {
   disclosureAcknowledgedBy String?
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
-  querySessions          QuerySession[]
+  schemaTables           SchemaTable[]
 }
 
 model SchemaTable {
@@ -193,6 +278,11 @@ model SchemaTable {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   columns              SchemaColumn[]
+  rowFilters           RowFilter[]
+  ownerships           TableOwnership[]
+  accessGrants         TableAccessGrant[]
+  accessRequests       AccessRequest[]
+  queryMessageTables   QueryMessageTable[] @relation("SchemaTableQueryMessageTables")
   @@index([tenantId])
 }
 
@@ -306,13 +396,15 @@ model QueryMessage {
   type      MessageType
   content   String
   createdAt DateTime @default(now())
-  tables    QueryMessageTable[]
+  tables    QueryMessageTable[] @relation("QueryMessageTables")
   @@index([sessionId])
 }
 
 model QueryMessageTable {
   messageId String
   tableId   String
+  message   QueryMessage @relation("QueryMessageTables", fields: [messageId], references: [id])
+  table     SchemaTable  @relation("SchemaTableQueryMessageTables", fields: [tableId], references: [id])
   join      String?
   @@id([messageId, tableId])
 }

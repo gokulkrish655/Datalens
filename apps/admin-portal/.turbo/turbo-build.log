@@ -1,0 +1,50 @@
+
+> @datalens/admin-portal@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.18
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 2.8s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/18) ...
+   Generating static pages (4/18) 
+   Generating static pages (8/18) 
+   Generating static pages (13/18) 
+ ✓ Generating static pages (18/18)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      168 B         106 kB
+├ ○ /_not-found                            988 B         103 kB
+├ ƒ /api/admin/audit                       164 B         102 kB
+├ ƒ /api/admin/settings                    164 B         102 kB
+├ ƒ /api/admin/tenants                     164 B         102 kB
+├ ƒ /api/admin/usage                       164 B         102 kB
+├ ƒ /api/admin/users                       164 B         102 kB
+├ ƒ /api/api-keys                          164 B         102 kB
+├ ƒ /api/api-keys/[id]                     164 B         102 kB
+├ ƒ /api/auth/[...nextauth]                164 B         102 kB
+├ ƒ /api/providers                         164 B         102 kB
+├ ƒ /api/tenants                           164 B         102 kB
+├ ƒ /api/tenants/[id]                      164 B         102 kB
+├ ƒ /api/tenants/[id]/activate             164 B         102 kB
+├ ƒ /api/tenants/[id]/deactivate           164 B         102 kB
+├ ƒ /api/tenants/[id]/impersonate          164 B         102 kB
+├ ○ /dashboard                             164 B         102 kB
+├ ○ /impersonations                        164 B         102 kB
+├ ○ /login                                 168 B         106 kB
+├ ○ /logout                                168 B         106 kB
+├ ○ /settings                              164 B         102 kB
+└ ○ /tenants                               164 B         102 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/18-0c598fde9e79b86d.js        46.1 kB
+  ├ chunks/87c73c54-0375ba195de27293.js  54.2 kB
+  └ other shared chunks (total)          1.91 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

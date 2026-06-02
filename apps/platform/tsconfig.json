@@ -5,6 +5,7 @@
     "noEmit": true,
     "allowJs": true,
     "incremental": true,
+    "ignoreDeprecations": "6.0",
     "plugins": [
       {
         "name": "next"
@@ -15,7 +16,8 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/types/global.d.ts"
   ],
   "exclude": [
     "node_modules"

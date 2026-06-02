@@ -1,0 +1,75 @@
+
+> @datalens/platform@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.18
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 18.2s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/30) ...
+   Generating static pages (7/30) 
+   Generating static pages (14/30) 
+   Generating static pages (22/30) 
+ ✓ Generating static pages (30/30)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                    Size  First Load JS
+┌ ○ /                                         182 B         106 kB
+├ ○ /_not-found                               990 B         103 kB
+├ ○ /access                                   227 B         103 kB
+├ ƒ /api/access/grants                        227 B         103 kB
+├ ƒ /api/access/requests                      227 B         103 kB
+├ ƒ /api/access/requests/[id]                 227 B         103 kB
+├ ƒ /api/access/requests/[id]/stages/[sid]    227 B         103 kB
+├ ƒ /api/audit                                227 B         103 kB
+├ ƒ /api/auth/[...nextauth]                   227 B         103 kB
+├ ƒ /api/auth/forgot-password                 227 B         103 kB
+├ ƒ /api/auth/impersonate                     227 B         103 kB
+├ ƒ /api/auth/lookup-domain                   227 B         103 kB
+├ ƒ /api/auth/reset-password                  227 B         103 kB
+├ ƒ /api/databases                            227 B         103 kB
+├ ƒ /api/databases/[id]                       227 B         103 kB
+├ ƒ /api/databases/[id]/crawl                 227 B         103 kB
+├ ƒ /api/databases/[id]/disclosure            227 B         103 kB
+├ ƒ /api/databases/[id]/status                227 B         103 kB
+├ ƒ /api/databases/[id]/test                  227 B         103 kB
+├ ƒ /api/download/[queryLogId]                227 B         103 kB
+├ ƒ /api/schema/columns/[id]                  227 B         103 kB
+├ ƒ /api/schema/import-descriptions           227 B         103 kB
+├ ƒ /api/schema/tables                        227 B         103 kB
+├ ƒ /api/schema/tables/[id]                   227 B         103 kB
+├ ƒ /api/schema/tables/[id]/row-filters       227 B         103 kB
+├ ƒ /api/sessions                             227 B         103 kB
+├ ƒ /api/sessions/[sessionId]                 227 B         103 kB
+├ ƒ /api/sessions/[sessionId]/clarify         227 B         103 kB
+├ ƒ /api/sessions/[sessionId]/execute         227 B         103 kB
+├ ƒ /api/sessions/[sessionId]/submit          227 B         103 kB
+├ ƒ /api/usage                                227 B         103 kB
+├ ƒ /api/users                                227 B         103 kB
+├ ƒ /api/users/[id]                           227 B         103 kB
+├ ƒ /api/users/pending                        227 B         103 kB
+├ ○ /audit                                    227 B         103 kB
+├ ○ /dashboard                                227 B         103 kB
+├ ○ /databases                                227 B         103 kB
+├ ○ /forgot-password                          182 B         106 kB
+├ ○ /login                                    182 B         106 kB
+├ ○ /pending                                  182 B         106 kB
+├ ○ /register                                 182 B         106 kB
+├ ○ /reset-password                           182 B         106 kB
+├ ○ /schema                                   227 B         103 kB
+├ ○ /usage                                    227 B         103 kB
+└ ○ /users                                    227 B         103 kB
++ First Load JS shared by all                102 kB
+  ├ chunks/18-0c598fde9e79b86d.js           46.1 kB
+  ├ chunks/87c73c54-0375ba195de27293.js     54.2 kB
+  └ other shared chunks (total)             1.91 kB
+
+
+ƒ Middleware                                  34 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

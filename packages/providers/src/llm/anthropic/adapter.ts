@@ -1,5 +1,24 @@
-﻿import { Anthropic, type CreateChatCompletionResponse } from '@anthropic-ai/sdk';
+﻿import { Anthropic } from '@anthropic-ai/sdk';
 import { ILLMProvider, LLMMessage, LLMResponse } from '../interface';
+
+function flattenAnthropicMessageContent(content: any): string {
+  if (typeof content === 'string') {
+    return content;
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((block) => {
+        if (block?.type === 'text') {
+          return block.text ?? '';
+        }
+        return '';
+      })
+      .join('');
+  }
+
+  return '';
+}
 
 export class AnthropicProvider implements ILLMProvider {
   readonly providerName = 'anthropic';
@@ -20,16 +39,23 @@ export class AnthropicProvider implements ILLMProvider {
     useFastModel?: boolean;
   }): Promise<LLMResponse> {
     const model = options.useFastModel ? this.fastModelId : this.modelId;
-    const response = await this.client.chat.completions.create({
+    const systemMessage = options.messages.find((message) => message.role === 'system');
+    const userAssistantMessages = options.messages
+      .filter((message) => message.role !== 'system')
+      .map((message) => ({ role: message.role, content: message.content }));
+
+    const response = await this.client.messages.create({
       model,
-      messages: options.messages.map((message) => ({ role: message.role, content: message.content })),
-      max_tokens_to_sample: options.maxTokens ?? 512,
+      max_tokens: options.maxTokens ?? 512,
       temperature: options.temperature ?? 0.3,
+      system: systemMessage?.content,
+      messages: userAssistantMessages,
     });
+
     return {
-      content: response.completion || '',
-      inputTokens: response?.meta?.input_tokens ?? 0,
-      outputTokens: response?.meta?.output_tokens ?? 0,
+      content: flattenAnthropicMessageContent(response.content),
+      inputTokens: response.usage?.input_tokens ?? 0,
+      outputTokens: response.usage.output_tokens,
       model,
     };
   }

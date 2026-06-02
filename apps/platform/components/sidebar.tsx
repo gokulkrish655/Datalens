@@ -1,13 +1,13 @@
 ﻿import Link from 'next/link';
 
 const navigation = [
-  { label: 'Dashboard', href: '/app/dashboard' },
-  { label: 'Databases', href: '/app/databases' },
-  { label: 'Schema', href: '/app/schema' },
-  { label: 'Access', href: '/app/access' },
-  { label: 'Usage', href: '/app/usage' },
-  { label: 'Users', href: '/app/users' },
-  { label: 'Audit', href: '/app/audit' },
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Databases', href: '/databases' },
+  { label: 'Schema', href: '/schema' },
+  { label: 'Access', href: '/access' },
+  { label: 'Usage', href: '/usage' },
+  { label: 'Users', href: '/users' },
+  { label: 'Audit', href: '/audit' },
 ];
 
 export function Sidebar() {

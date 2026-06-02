@@ -1,6 +1,7 @@
 ﻿import { Client } from 'pg';
 import {
   ConnectionConfig,
+  ForeignKeyInfo,
   IDbConnector,
   QueryResult,
   SchemaColumnInfo,
@@ -15,7 +16,7 @@ function buildRedshiftConfig(config: ConnectionConfig) {
     host: config.host,
     port: config.port,
     database: config.database,
-    user: config.user,
+    user: config.username ?? config.user,
     password: config.password,
     ssl: config.ssl ? { rejectUnauthorized: false } : undefined,
   };
@@ -28,33 +29,46 @@ function quoteIdentifier(value: string) {
   return `"${value}"`;
 }
 
-function parseMajorVersion(versionString: string) {
-  const match =
-    versionString.match(/Redshift\s+([0-9]+)/i) ||
-    versionString.match(/PostgreSQL\s+(\d+)/i);
-  return match ? Number(match[1]) : 0;
+function parseVersionParts(versionString: string) {
+  const match = versionString.match(/(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+  return {
+    major: match ? Number(match[1]) : 0,
+    minor: match && match[2] ? Number(match[2]) : 0,
+    patch: match && match[3] ? Number(match[3]) : 0,
+  };
+}
+
+function buildRowCountEstimate(value: unknown): bigint | undefined {
+  if (typeof value === 'bigint') return value;
+  if (typeof value === 'number') return BigInt(Math.floor(value));
+  if (typeof value === 'string' && value !== '') return BigInt(value);
+  return undefined;
 }
 
 export const redshiftConnector: IDbConnector = {
   name: 'redshift',
+  displayName: 'Amazon Redshift',
   async detectVersion(config: ConnectionConfig): Promise<VersionInfo> {
     const client = new Client(buildRedshiftConfig(config));
     await client.connect();
     try {
       const result = await client.query('SELECT version() AS version');
-      const dbVersionString = String((result.rows as any)?.[0]?.version ?? 'Amazon Redshift');
+      const versionString = String((result.rows as any)?.[0]?.version ?? 'Amazon Redshift');
+      const versionParts = parseVersionParts(versionString);
       return {
         connectorName: 'redshift',
-        dbVersionString,
-        dbVersionMajor: parseMajorVersion(dbVersionString),
-        dialectDescription: buildDialectDescription(
-          'redshift',
-          dbVersionString,
-        ),
+        versionString,
+        major: versionParts.major,
+        minor: versionParts.minor,
+        patch: versionParts.patch,
+        dialectDescription: buildDialectDescription('redshift', versionString),
       };
     } finally {
       await client.end();
     }
+  },
+  async introspectRelationships(_config: ConnectionConfig): Promise<ForeignKeyInfo[]> {
+    return [];
   },
   async introspectTables(config: ConnectionConfig): Promise<SchemaTableInfo[]> {
     const client = new Client(buildRedshiftConfig(config));
@@ -64,12 +78,13 @@ export const redshiftConnector: IDbConnector = {
         ? `table_schema = '${config.schema}'`
         : 'table_schema NOT IN (\'pg_catalog\', \'information_schema\')';
       const result = await client.query(
-        `SELECT table_name, table_schema FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND ${schemaCondition} ORDER BY table_schema, table_name`,
+        `SELECT table_name, table_schema, "rows" AS row_count_estimate FROM svv_table_info WHERE ${schemaCondition} ORDER BY table_schema, table_name`,
       );
       return (result.rows as any[]).map((row: any) => ({
         tableName: row.table_name,
         schemaName: row.table_schema,
         displayName: row.table_name,
+        rowCountEstimate: buildRowCountEstimate(row.row_count_estimate),
       }));
     } finally {
       await client.end();
@@ -77,6 +92,7 @@ export const redshiftConnector: IDbConnector = {
   },
   async introspectColumns(
     config: ConnectionConfig,
+    tableFilter?: Array<{ schemaName: string; tableName: string }>,
   ): Promise<SchemaColumnInfo[]> {
     const client = new Client(buildRedshiftConfig(config));
     await client.connect();
@@ -93,7 +109,7 @@ export const redshiftConnector: IDbConnector = {
         columnName: row.column_name,
         displayName: row.column_name,
         dataType: row.data_type,
-        description: undefined,
+        isNullable: row.is_nullable === 'YES',
         semanticType: 'unknown',
       }));
     } finally {
@@ -105,7 +121,7 @@ export const redshiftConnector: IDbConnector = {
     schemaName: string,
     tableName: string,
     columnName: string,
-    limit: number,
+    limit = 5,
   ): Promise<string[]> {
     const client = new Client(buildRedshiftConfig(config));
     await client.connect();
@@ -122,20 +138,26 @@ export const redshiftConnector: IDbConnector = {
       await client.end();
     }
   },
-  async validateWhereClause(_config: ConnectionConfig, whereClause: string) {
+  async validateWhereClause(
+    _config: ConnectionConfig,
+    _schemaName: string,
+    _tableName: string,
+    whereClause: string,
+  ) {
     return validateWhereClause(whereClause);
   },
   async executeQuery(
     config: ConnectionConfig,
     sql: string,
+    rowLimit: number,
     _timeoutMs: number,
-    _rowLimit: number,
   ): Promise<QueryResult> {
     ensureReadOnlySql(sql);
     const client = new Client(buildRedshiftConfig(config));
     await client.connect();
     try {
-      const result = await client.query(sql);
+      const wrappedSql = `SELECT * FROM (${sql.replace(/;\s*$/, '')}) AS __datalens_query LIMIT ${rowLimit}`;
+      const result = await client.query(wrappedSql);
       return {
         rows: result.rows as Record<string, unknown>[],
         fields: result.fields.map((field: any) => ({

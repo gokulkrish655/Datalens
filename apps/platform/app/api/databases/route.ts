@@ -2,7 +2,7 @@
 
 import { prisma } from '@datalens/db';
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   try {
     const connections = await prisma.databaseConnection.findMany();
     return new Response(JSON.stringify({ ok: true, connections }), { headers: { 'Content-Type': 'application/json' } });

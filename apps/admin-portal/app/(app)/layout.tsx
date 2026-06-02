@@ -1,4 +1,4 @@
-﻿import './globals.css';
+﻿import '../globals.css';
 import { AdminNavbar } from '../../components/navbar';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

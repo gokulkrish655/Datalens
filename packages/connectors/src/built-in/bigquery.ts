@@ -1,6 +1,7 @@
 ﻿import { BigQuery } from '@google-cloud/bigquery';
 import {
   ConnectionConfig,
+  ForeignKeyInfo,
   IDbConnector,
   QueryResult,
   SchemaColumnInfo,
@@ -24,38 +25,51 @@ function quoteIdentifier(value: string) {
   return `\`${value}\``;
 }
 
+function buildRowCountEstimate(value: unknown): bigint | undefined {
+  if (typeof value === 'bigint') return value;
+  if (typeof value === 'number') return BigInt(Math.floor(value));
+  if (typeof value === 'string' && value !== '') return BigInt(value);
+  return undefined;
+}
+
 export const bigqueryConnector: IDbConnector = {
   name: 'bigquery',
+  displayName: 'BigQuery',
   async detectVersion(config: ConnectionConfig): Promise<VersionInfo> {
     const client = buildBigQueryClient(config);
     const [rows] = await client.query({
       query: 'SELECT "BigQuery Standard SQL" AS version',
     });
-    const versionString = String(
-      (rows as any)?.[0]?.version ?? 'BigQuery Standard SQL',
-    );
+    const versionString = String((rows as any)?.[0]?.version ?? 'BigQuery Standard SQL');
     return {
       connectorName: 'bigquery',
-      dbVersionString: versionString,
-      dbVersionMajor: 1,
+      versionString,
+      major: 1,
+      minor: 0,
+      patch: 0,
       dialectDescription: buildDialectDescription('bigquery', versionString),
     };
+  },
+  async introspectRelationships(_config: ConnectionConfig): Promise<ForeignKeyInfo[]> {
+    return [];
   },
   async introspectTables(config: ConnectionConfig): Promise<SchemaTableInfo[]> {
     const client = buildBigQueryClient(config);
     const projectId = config.extra?.projectId ?? config.database;
     const dataset = config.extra?.dataset ?? config.schema;
     if (!projectId || !dataset) return [];
-    const sql = `SELECT table_name FROM \`${projectId}.${dataset}.INFORMATION_SCHEMA.TABLES\` WHERE table_type = 'BASE TABLE' ORDER BY table_name`;
+    const sql = `SELECT table_name, row_count FROM \`${projectId}.${dataset}.INFORMATION_SCHEMA.TABLES\` WHERE table_type = 'BASE TABLE' ORDER BY table_name`;
     const [rows] = await client.query({ query: sql });
     return (rows as any[]).map((row) => ({
       tableName: row.table_name,
       schemaName: dataset,
       displayName: row.table_name,
+      rowCountEstimate: buildRowCountEstimate(row.row_count),
     }));
   },
   async introspectColumns(
     config: ConnectionConfig,
+    tableFilter?: Array<{ schemaName: string; tableName: string }>,
   ): Promise<SchemaColumnInfo[]> {
     const client = buildBigQueryClient(config);
     const projectId = config.extra?.projectId ?? config.database;
@@ -69,7 +83,7 @@ export const bigqueryConnector: IDbConnector = {
       columnName: row.column_name,
       displayName: row.column_name,
       dataType: row.data_type,
-      description: undefined,
+      isNullable: row.is_nullable === 'YES',
       semanticType: 'unknown',
     }));
   },
@@ -78,7 +92,7 @@ export const bigqueryConnector: IDbConnector = {
     _schemaName: string,
     tableName: string,
     columnName: string,
-    limit: number,
+    limit = 5,
   ): Promise<string[]> {
     const client = buildBigQueryClient(config);
     const projectId = config.extra?.projectId ?? config.database;
@@ -88,18 +102,24 @@ export const bigqueryConnector: IDbConnector = {
     const [rows] = await client.query({ query: sql });
     return (rows as any[]).map((row) => String(row.sample));
   },
-  async validateWhereClause(_config: ConnectionConfig, whereClause: string) {
+  async validateWhereClause(
+    _config: ConnectionConfig,
+    _schemaName: string,
+    _tableName: string,
+    whereClause: string,
+  ) {
     return validateWhereClause(whereClause);
   },
   async executeQuery(
     config: ConnectionConfig,
     sql: string,
+    rowLimit: number,
     _timeoutMs: number,
-    _rowLimit: number,
   ): Promise<QueryResult> {
     ensureReadOnlySql(sql);
     const client = buildBigQueryClient(config);
-    const [rows] = await client.query({ query: sql });
+    const wrappedSql = `SELECT * FROM (${sql.replace(/;\s*$/, '')}) AS __datalens_query LIMIT ${rowLimit}`;
+    const [rows] = await client.query({ query: wrappedSql });
     return {
       rows: rows as Record<string, unknown>[],
       fields: [],

@@ -10,13 +10,18 @@ class ConnectorRegistry {
   get(name: string): IDbConnector {
     const connector = this.map.get(name);
     if (!connector) {
-      throw new Error(`Connector not found: ${name}`);
+      throw new Error(
+        `No connector registered for "${name}". Available: ${[...this.map.keys()].join(', ')}.`,
+      );
     }
     return connector;
   }
 
-  list(): IDbConnector[] {
-    return Array.from(this.map.values());
+  list(): Array<{ name: string; displayName: string }> {
+    return Array.from(this.map.values()).map((connector) => ({
+      name: connector.name,
+      displayName: connector.displayName,
+    }));
   }
 }
 

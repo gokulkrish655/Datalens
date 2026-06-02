@@ -10,7 +10,7 @@ export default function AdminHomePage() {
             Manage tenants, review impersonations, and configure application settings from the administration workspace.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/app/dashboard" className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-700">
+            <Link href="/dashboard" className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-700">
               Open admin dashboard
             </Link>
           </div>
