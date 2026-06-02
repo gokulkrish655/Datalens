@@ -2,3 +2,91 @@
 > @datalens/query-engine@0.1.0 build
 > tsc -p tsconfig.json
 
+../connectors/src/built-in/mssql.ts(51,30): error TS7016: Could not find a declaration file for module 'mssql'. 'C:/Users/51010763/Downloads/project/datalens/node_modules/mssql/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/mssql` if it exists or add a new declaration (.d.ts) file containing `declare module 'mssql';`
+../connectors/src/built-in/oracle.ts(1,22): error TS7016: Could not find a declaration file for module 'oracledb'. 'C:/Users/51010763/Downloads/project/datalens/node_modules/oracledb/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/oracledb` if it exists or add a new declaration (.d.ts) file containing `declare module 'oracledb';`
+../connectors/src/built-in/postgres.ts(1,24): error TS7016: Could not find a declaration file for module 'pg'. 'C:/Users/51010763/Downloads/project/datalens/node_modules/pg/esm/index.mjs' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pg` if it exists or add a new declaration (.d.ts) file containing `declare module 'pg';`
+../connectors/src/built-in/postgres.ts(11,41): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/dialect-utils.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/postgres.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mysql.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mariadb.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mssql.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/oracle.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/snowflake.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/bigquery.ts'
+    Imported via './dialect-utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/redshift.ts'
+../connectors/src/built-in/postgres.ts(12,56): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/query-safety.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/postgres.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mysql.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mariadb.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mssql.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/oracle.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/snowflake.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/bigquery.ts'
+    Imported via './query-safety' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/redshift.ts'
+../connectors/src/built-in/redshift.ts(1,24): error TS7016: Could not find a declaration file for module 'pg'. 'C:/Users/51010763/Downloads/project/datalens/node_modules/pg/esm/index.mjs' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/pg` if it exists or add a new declaration (.d.ts) file containing `declare module 'pg';`
+../connectors/src/index.ts(1,26): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/registry.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './registry' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/index.ts'
+    Imported via './registry' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/manager.ts'
+../connectors/src/index.ts(2,35): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/postgres.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(3,32): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mysql.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(4,34): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mariadb.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(5,32): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mssql.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(6,33): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/oracle.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(7,36): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/snowflake.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(8,35): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/bigquery.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(9,35): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/redshift.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../connectors/src/index.ts(21,43): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/manager.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via './manager' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/index.ts'
+    Imported via './manager' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/index.ts'
+../connectors/src/manager.ts(2,25): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/providers/src/crypto.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '../../providers/src/crypto' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/manager.ts'
+    Imported via '@datalens/providers/src/crypto' from file 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src/query/execute.ts' with packageId '@datalens/providers/src/crypto.ts@0.1.0'
+../connectors/src/manager.ts(9,34): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/pii.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../db/src/index.ts(1,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/db/src/client.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+src/query/execute.ts(3,26): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/index.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+src/query/oracle.ts(2,29): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/index.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@datalens/utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src/query/oracle.ts'
+    Imported via '@datalens/utils' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/manager.ts'
+src/schema/retrieve.ts(19,46): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/db/src/index.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@datalens/db' from file 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src/schema/retrieve.ts'
+    Imported via '@datalens/db' from file 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src/query/execute.ts'
+    Imported via '@datalens/db' from file 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src/access/request.ts'
+    Imported via '@datalens/db' from file 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src/access/review.ts'
+../utils/src/buildEmbedDoc.ts(1,51): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/interface.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via '@datalens/connectors/src/interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/buildEmbedDoc.ts' with packageId '@datalens/connectors/src/interface.ts@0.1.0'
+    Imported via './interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/registry.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/postgres.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/query-safety.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mysql.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mariadb.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/mssql.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/oracle.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/snowflake.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/bigquery.ts'
+    Imported via '../interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/built-in/redshift.ts'
+    Imported via './interface' from file 'C:/Users/51010763/Downloads/project/datalens/packages/connectors/src/manager.ts'
+../utils/src/index.ts(1,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/validateSql.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../utils/src/index.ts(2,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/extractDomain.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../utils/src/index.ts(3,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/computeModelTier.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../utils/src/index.ts(4,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/buildEmbedDoc.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../utils/src/index.ts(5,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/detectSemanticType.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+../utils/src/index.ts(6,15): error TS6059: File 'C:/Users/51010763/Downloads/project/datalens/packages/utils/src/mergeResults.ts' is not under 'rootDir' 'C:/Users/51010763/Downloads/project/datalens/packages/query-engine/src'. 'rootDir' is expected to contain all source files.
+npm error Lifecycle script `build` failed with error:
+npm error code 2
+npm error path C:\Users\51010763\Downloads\project\datalens\packages\query-engine
+npm error workspace @datalens/query-engine@0.1.0
+npm error location C:\Users\51010763\Downloads\project\datalens\packages\query-engine
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c tsc -p tsconfig.json
