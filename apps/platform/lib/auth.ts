@@ -3,6 +3,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { prisma } from '@datalens/db';
 import bcrypt from 'bcrypt';
+import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt', maxAge: 8 * 60 * 60, updateAge: 3600 },
@@ -65,3 +67,24 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
 };
+
+export async function getAuthSession() {
+  return getServerSession(authOptions);
+}
+
+export async function requireRole(roles: Array<'BASIC_USER' | 'MANAGER' | 'DB_ADMIN'>) {
+  const session = await getAuthSession();
+  if (!session?.user?.tenantId) {
+    return {
+      session: null,
+      response: NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 }),
+    };
+  }
+  if (!roles.includes(session.user.role as 'BASIC_USER' | 'MANAGER' | 'DB_ADMIN')) {
+    return {
+      session: null,
+      response: NextResponse.json({ ok: false, error: 'Forbidden' }, { status: 403 }),
+    };
+  }
+  return { session, response: null };
+}

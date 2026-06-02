@@ -1,24 +1,20 @@
+import { NextResponse } from 'next/server';
+import { createAdminPrisma } from '@datalens/db';
+import { requireRole } from '@/lib/auth';
 
+type RouteParams = { params: Promise<{ id: string }> };
 
-import { prisma } from '@datalens/db';
-
-function extractIdFromPath(pathname: string) {
-  const parts = pathname.split('/').filter(Boolean);
-  return parts[parts.length - 1];
+export async function GET(_request: Request, { params }: RouteParams) {
+  const auth = await requireRole(['DB_ADMIN', 'MANAGER']);
+  if (auth.response) return auth.response;
+  const { id } = await params;
+  const db = createAdminPrisma();
+  const conn = await db.databaseConnection.findFirst({
+    where: { id, tenantId: auth.session!.user.tenantId },
+    select: { id: true, status: true, updatedAt: true },
+  });
+  if (!conn) {
+    return NextResponse.json({ ok: false, error: 'Not found' }, { status: 404 });
+  }
+  return NextResponse.json({ ok: true, connection: conn });
 }
-
-export async function GET(request: Request) {
-  const id = extractIdFromPath(new URL(request.url).pathname);
-  const conn = await prisma.databaseConnection.findUnique({ where: { id } });
-  if (!conn) return new Response(JSON.stringify({ ok: false, error: 'Not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-  return new Response(JSON.stringify({ ok: true, status: conn.status }), { headers: { 'Content-Type': 'application/json' } });
-}
-
-export async function POST(_request: Request) {
-  return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } });
-}
-
-
-
-
-
